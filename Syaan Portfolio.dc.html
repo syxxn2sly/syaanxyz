@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Syaan Merchant — Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="ext-resource-dependency" content="uploads/pasted-1784252464598-0.png">
+  <meta name="ext-resource-dependency" content="uploads/Screenshot_16-7-2026_214031_syaanmerchant786.wixsite.com.jpeg">
+  <meta name="ext-resource-dependency" content="uploads/Screenshot_15-7-2026_221021_syaanmerchant786.wixsite.com.jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=Sora:wght@400;500;600;700&amp;family=Schibsted+Grotesk:wght@400;500;600;700&amp;family=Bricolage+Grotesque:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    h1, h2, h3 { font-family: var(--hfont); text-transform: lowercase; }
+    :root {
+      --hfont: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --bg1: oklch(0.96 0.005 250);
+      --bg2: oklch(0.93 0.012 255);
+      --card: rgba(255,255,255,0.72);
+      --card-solid: #ffffff;
+      --stroke: rgba(0,0,0,0.07);
+      --text: #1c1c1e;
+      --text2: rgba(28,28,30,0.62);
+      --text3: rgba(28,28,30,0.4);
+      --chip: rgba(120,120,128,0.12);
+      --accent: #3D6DB0;
+      --dock: rgba(255,255,255,0.6);
+      --shadow: 0 8px 32px rgba(20,25,60,0.08);
+      --sep: rgba(0,0,0,0.06);
+    }
+    html.dark {
+      --bg1: oklch(0.20 0.015 255);
+      --bg2: oklch(0.15 0.02 255);
+      --card: rgba(34,34,40,0.72);
+      --card-solid: #1c1c22;
+      --stroke: rgba(255,255,255,0.08);
+      --text: #f2f2f7;
+      --text2: rgba(242,242,247,0.6);
+      --text3: rgba(242,242,247,0.35);
+      --chip: rgba(120,120,128,0.24);
+      --accent: #8CADD6;
+      --dock: rgba(30,30,36,0.6);
+      --shadow: 0 8px 32px rgba(0,0,0,0.4);
+      --sep: rgba(255,255,255,0.07);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--bfont, 'Schibsted Grotesk'), -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Helvetica, sans-serif;
+      background: linear-gradient(160deg, var(--bg1), var(--bg2));
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.4s;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { opacity: 0.75; }
+    ::selection { background: var(--accent); color: #fff; }
+    /* mobile layout — media queries can't be inline */
+    @media (max-width: 720px) {
+      main { grid-template-columns: 1fr !important; padding: 20px 14px 0 !important; gap: 14px !important; }
+      main > * { grid-column: 1 / -1 !important; }
+      #projects { display: flex !important; flex-direction: column !important; }
+      nav { display: none !important; }
+      footer#contact { gap: 10px !important; padding: 10px 14px !important; bottom: 12px !important; max-width: calc(100vw - 24px); }
+      footer#contact a > span:first-child { width: 44px !important; height: 44px !important; font-size: 15px !important; }
+    }
+    @keyframes jigA { 0% { transform: rotate(-0.6deg); } 50% { transform: rotate(0.6deg); } 100% { transform: rotate(-0.6deg); } }
+    @keyframes jigB { 0% { transform: rotate(0.6deg); } 50% { transform: rotate(-0.6deg); } 100% { transform: rotate(0.6deg); } }
+    html.jiggle [data-jig] { animation: jigA 0.28s ease-in-out infinite; }
+    html.jiggle [data-jig]:nth-of-type(even) { animation-name: jigB; animation-duration: 0.26s; }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; padding-bottom:140px;">
+
+  <!-- lock screen intro -->
+  <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ unlock }}" data-screen-label="Lock screen" style="position:fixed; inset:0; z-index:300; background:linear-gradient(172deg, oklch(0.42 0.09 255), oklch(0.22 0.07 260) 55%, oklch(0.13 0.05 265)); color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:72px 24px 26px; box-sizing:border-box; cursor:pointer; user-select:none; transform:translateY({{ lockY }}); transition:transform 0.65s cubic-bezier(0.55,0,0.15,1);">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+        <div style="font-size:15px; font-weight:600; opacity:0.85;">{{ lockDate }}</div>
+        <div style="font-size:clamp(56px, 18vw, 96px); font-weight:250; letter-spacing:-0.02em; line-height:1; font-variant-numeric:tabular-nums;">{{ lockClock }}</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center;">
+        <div style="font-size:22px; font-weight:700; letter-spacing:-0.01em;">Syaan Merchant</div>
+        <div style="font-size:14px; font-weight:500; opacity:0.75;">Software Engineering · McMaster University</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+        <div style="font-size:14px; font-weight:600; opacity:0.8;">Click anywhere to unlock</div>
+        <div style="width:140px; height:5px; border-radius:3px; background:rgba(255,255,255,0.85);"></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- status bar -->
+  <div style="position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:14px 28px; backdrop-filter:blur(24px) saturate(1.6); -webkit-backdrop-filter:blur(24px) saturate(1.6); background:var(--dock); border-bottom:1px solid var(--stroke);">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div onClick="{{ toggleZone }}" title="Switch time zone" style="font-size:15px; font-weight:600; letter-spacing:-0.01em; cursor:pointer; user-select:none;">{{ clock }} <span style="font-size:12px; font-weight:700; color:var(--text3);">{{ zoneLabel }}</span></div>
+      <sc-if value="{{ jiggling }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ stopJiggle }}" style="border:none; cursor:pointer; background:var(--accent); color:#fff; font-size:13px; font-weight:700; padding:5px 14px; border-radius:999px;">Done</button>
+      </sc-if>
+    </div>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <nav style="display:flex; align-items:center; gap:10px; font-size:14px; font-weight:500; color:var(--text2);">
+        <a href="#projects" style="color:var(--text2);">Projects</a>
+        <span style="color:var(--text3);">|</span>
+        <a href="#experience" style="color:var(--text2);">Experience</a>
+        <span style="color:var(--text3);">|</span>
+        <a href="#stack" style="color:var(--text2);">Stack</a>
+        <span style="color:var(--text3);">|</span>
+        <a href="#contact" style="color:var(--text2);">Contact</a>
+      </nav>
+      <!-- iOS-style switch -->
+      <div onClick="{{ toggleTheme }}" role="switch" aria-label="Dark mode" style="width:51px; height:31px; border-radius:16px; background:{{ switchBg }}; position:relative; cursor:pointer; transition:background 0.25s; flex:none;">
+        <div style="position:absolute; top:2px; left:{{ knobLeft }}; width:27px; height:27px; border-radius:50%; background:#fff; box-shadow:0 2px 6px rgba(0,0,0,0.25); transition:left 0.25s;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- widget grid -->
+  <main onMouseDown="{{ pressStart }}" onMouseUp="{{ pressEnd }}" onMouseLeave="{{ pressEnd }}" onTouchStart="{{ pressStart }}" onTouchEnd="{{ pressEnd }}" style="max-width:1060px; margin:0 auto; padding:40px 24px 0; display:grid; grid-template-columns:repeat(6, 1fr); gap:18px;">
+
+    <!-- hero widget -->
+    <section data-screen-label="Hero" draggable="{{ dragEnabled }}" onDragStart="{{ blocks.hero.dragStart }}" onDragOver="{{ blocks.hero.dragOver }}" onDrop="{{ blockDrop }}" onDragEnd="{{ blockDrop }}" style="order:{{ blocks.hero.order }}; cursor:{{ dragCursor }}; min-width:0; grid-column:span 4; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--stroke); border-radius:28px; box-shadow:var(--shadow); padding:36px 36px 32px; display:flex; flex-direction:column; gap:14px; transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.35s;" data-jig="true" style-hover="transform:translateY(-5px) scale(1.012); box-shadow:0 18px 48px rgba(20,25,60,0.2);">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="width:8px; height:8px; border-radius:50%; background:#30D158; flex:none;"></span>
+        <span style="font-size:13px; font-weight:600; color:var(--text2); text-transform:uppercase; letter-spacing:0.06em;">Open to co-op opportunities</span>
+      </div>
+      <h1 style="margin:0; font-size:clamp(32px, 8vw, 44px); font-weight:700; letter-spacing:-0.03em; line-height:1.05;">Syaan Merchant</h1>
+      <p style="margin:0; font-size:18px; line-height:1.55; color:var(--text2); max-width:46ch; text-wrap:pretty;">Third-year Software Engineering student at McMaster University with a passion for machine learning, creative problem-solving, and robotics.</p>
+      <div style="display:flex; gap:10px; margin-top:6px; flex-wrap:wrap;">
+        <a href="resume.pdf" style="background:var(--accent); color:#fff; font-size:15px; font-weight:600; padding:10px 20px; border-radius:999px; transition:transform 0.2s, opacity 0.2s;" style-hover="transform:scale(1.05)">Resume</a>
+        <a href="https://github.com/syaanmerchant" style="background:var(--chip); color:var(--text); font-size:15px; font-weight:600; padding:10px 20px; border-radius:999px; transition:transform 0.2s;" style-hover="transform:scale(1.05)">GitHub</a>
+        <a href="https://www.linkedin.com/in/syaan-merchant-127a88285/" style="background:var(--chip); color:var(--text); font-size:15px; font-weight:600; padding:10px 20px; border-radius:999px; transition:transform 0.2s;" style-hover="transform:scale(1.05)">LinkedIn</a>
+      </div>
+    </section>
+
+    <!-- education widget -->
+    <section data-screen-label="Education" draggable="{{ dragEnabled }}" onDragStart="{{ blocks.edu.dragStart }}" onDragOver="{{ blocks.edu.dragOver }}" onDrop="{{ blockDrop }}" onDragEnd="{{ blockDrop }}" style="order:{{ blocks.edu.order }}; cursor:{{ dragCursor }}; min-width:0; grid-column:span 2; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--stroke); border-radius:28px; box-shadow:var(--shadow); padding:26px; display:flex; flex-direction:column; gap:10px; transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.35s;" data-jig="true" style-hover="transform:translateY(-5px) scale(1.012); box-shadow:0 18px 48px rgba(20,25,60,0.2);">
+      <div style="font-size:12px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.08em;">Education</div>
+      <div style="font-size:19px; font-weight:700; letter-spacing:-0.01em;">McMaster University</div>
+      <div style="font-size:14px; color:var(--text2); line-height:1.5;">B.Eng Software Engineering, Co-op<br>2024 – 2029 (expected)</div>
+      <div style="display:flex; flex-direction:column; gap:6px; margin-top:auto;">
+        <div style="font-size:13px; color:var(--text2); display:flex; gap:8px; align-items:baseline;"><span style="color:var(--accent); font-weight:700;">·</span>Award of Excellence, Faculty of Engineering</div>
+        <div style="font-size:13px; color:var(--text2); display:flex; gap:8px; align-items:baseline;"><span style="color:var(--accent); font-weight:700;">·</span>Dean's Honour List (×2) · GPA 3.98</div>
+      </div>
+    </section>
+
+    <!-- featured project -->
+    <section id="projects" data-screen-label="Projects" draggable="{{ dragEnabled }}" onDragStart="{{ blocks.projects.dragStart }}" onDragOver="{{ blocks.projects.dragOver }}" onDrop="{{ blockDrop }}" onDragEnd="{{ blockDrop }}" style="order:{{ blocks.projects.order }}; cursor:{{ dragCursor }}; min-width:0; grid-column:span 6; display:grid; grid-template-columns:repeat(6,1fr); gap:18px; scroll-margin-top:80px;">
+      <div style="grid-column:span 6; display:flex; align-items:baseline; gap:12px; padding:14px 6px 0;">
+        <h2 style="margin:0; font-size:24px; font-weight:700; letter-spacing:-0.02em;">Projects</h2>
+      </div>
+
+      <article style="grid-column:span 6; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--stroke); border-radius:28px; box-shadow:var(--shadow); padding:34px; display:grid; grid-template-columns:64px minmax(0,1fr); gap:22px; align-items:start; transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.35s;" data-jig="true" style-hover="transform:translateY(-5px) scale(1.012); box-shadow:0 18px 48px rgba(20,25,60,0.2);">
+        <div style="width:64px; height:64px; border-radius:16px; background:linear-gradient(145deg, #46689A, #22344F); display:grid; place-items:center; color:#fff; font-size:26px; font-weight:800; letter-spacing:-0.02em;">C</div>
+        <div style="display:flex; flex-direction:column; gap:8px; min-width:0;">
+          <div>
+            <h3 style="margin:0; font-size:clamp(21px, 5vw, 26px); font-weight:700; letter-spacing:-0.02em;">CLAIRITY</h3>
+            <div style="font-size:14px; font-weight:600; color:var(--accent); margin-top:2px;">DeltaHacks 12 · Hackathon</div>
+          </div>
+          <p style="margin:0; font-size:16px; line-height:1.6; color:var(--text2); max-width:70ch; text-wrap:pretty;">iOS app built in a 36-hour sprint that transforms medical documents into actionable care plans — Gemini LLM parsing, OCR pipelines (Vision, Textract, Azure), and clinical NLP to extract medications and follow-up guidance.</p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;">
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 12px; border-radius:999px; color:var(--text2);">Swift</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 12px; border-radius:999px; color:var(--text2);">SwiftUI</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 12px; border-radius:999px; color:var(--text2);">Gemini API</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 12px; border-radius:999px; color:var(--text2);">OCR / NLP</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 12px; border-radius:999px; color:var(--text2);">iOS</span>
+          </div>
+          <a href="https://devpost.com/software/clairity-46nbj8" style="font-size:15px; font-weight:600; margin-top:6px;">View on Devpost →</a>
+        </div>
+      </article>
+
+      <sc-if value="{{ showFirstYear }}" hint-placeholder-val="{{ true }}">
+        <article style="grid-column:span 3; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--stroke); border-radius:28px; box-shadow:var(--shadow); padding:26px; display:flex; flex-direction:column; gap:8px; transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.35s;" data-jig="true" style-hover="transform:translateY(-5px) scale(1.012); box-shadow:0 18px 48px rgba(20,25,60,0.2);">
+          <h3 style="margin:0; font-size:19px; font-weight:700; letter-spacing:-0.01em;"><a href="https://syaanmerchant786.wixsite.com/syaan-merchant/project-two-p2" style="color:inherit;" style-hover="opacity:1;">Wastewater Filter System</a></h3>
+          <div style="font-size:13px; font-weight:600; color:var(--text3);">ENG 1P13 · Design Studio</div>
+          <p style="margin:0; font-size:14px; line-height:1.55; color:var(--text2); text-wrap:pretty;">Microplastic filtration concept for a municipal wastewater plant — material selection with ANSYS Granta EduPack and lifecycle EcoAudit.</p>
+          <a href="#projects" onClick="{{ openFilter }}" style="font-size:14px; font-weight:600; margin-top:auto; cursor:pointer;">Full write-up →</a>
+        </article>
+        <article style="grid-column:span 3; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--stroke); border-radius:28px; box-shadow:var(--shadow); padding:26px; display:flex; flex-direction:column; gap:8px; transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.35s;" data-jig="true" style-hover="transform:translateY(-5px) scale(1.012); box-shadow:0 18px 48px rgba(20,25,60,0.2);">
+          <h3 style="margin:0; font-size:19px; font-weight:700; letter-spacing:-0.01em;"><a href="https://syaanmerchant786.wixsite.com/syaan-merchant/project-three-p3-1" style="color:inherit;" style-hover="opacity:1;">Navioto Vision Assistant</a></h3>
+          <div style="font-size:13px; font-weight:600; color:var(--text3);">ENG 1P13 · Design Studio</div>
+          <p style="margin:0; font-size:14px; line-height:1.55; color:var(--text2); text-wrap:pretty;">Vest-mounted, AI-powered wearable assistant co-designed for a client with Usher's Syndrome — smartphone vision, tactile controls, ergonomic load distribution.</p>
+          <a href="#projects" onClick="{{ openNavioto }}" style="font-size:14px; font-weight:600; margin-top:auto; cursor:pointer;">Full write-up →</a>
+        </article>
+      </sc-if>
+
+      <!-- more projects: collapsed grouped list -->
+      <div style="grid-column:span 6; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--stroke); border-radius:28px; box-shadow:var(--shadow); overflow:hidden;">
+        <button onClick="{{ toggleMore }}" style="width:100%; border:none; cursor:pointer; background:none; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:20px 26px; color:var(--text); font-family:inherit; text-align:left;">
+          <div style="display:flex; align-items:baseline; gap:10px;">
+            <span style="font-size:17px; font-weight:700; letter-spacing:-0.01em; text-transform:lowercase; font-family:var(--hfont);">More projects</span>
+            <span style="font-size:13px; font-weight:600; color:var(--text3);">{{ moreCount }}</span>
+          </div>
+          <span style="font-size:14px; font-weight:700; color:var(--text3); transform:rotate({{ moreChevron }}); transition:transform 0.25s;">▾</span>
+        </button>
+        <sc-if value="{{ moreOpen }}" hint-placeholder-val="{{ false }}">
+          <sc-for list="{{ moreProjects }}" as="proj">
+            <div style="padding:18px 26px; border-top:1px solid var(--sep); display:flex; flex-direction:column; gap:5px;">
+              <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <sc-if value="{{ proj.href }}" hint-placeholder-val="{{ false }}">
+                  <a href="{{ proj.href }}" style="font-size:16px; font-weight:700; letter-spacing:-0.01em; color:inherit; text-transform:lowercase; font-family:var(--hfont);" style-hover="opacity:1;">{{ proj.title }}</a>
+                </sc-if>
+                <sc-if value="{{ proj.noHref }}" hint-placeholder-val="{{ true }}">
+                  <span style="font-size:16px; font-weight:700; letter-spacing:-0.01em; text-transform:lowercase; font-family:var(--hfont);">{{ proj.title }}</span>
+                </sc-if>
+                <span style="font-size:13px; font-weight:600; color:var(--text3);">{{ proj.context }}</span>
+              </div>
+              <div style="font-size:14px; line-height:1.55; color:var(--text2); text-wrap:pretty;">{{ proj.blurb }}</div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+                <sc-for list="{{ proj.tags }}" as="tag">
+                  <span style="background:var(--chip); font-size:12px; font-weight:600; padding:4px 10px; border-radius:999px; color:var(--text2);">{{ tag }}</span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </sc-if>
+      </div>
+    </section>
+
+    <!-- experience: grouped list widget -->
+    <section id="experience" data-screen-label="Experience" draggable="{{ dragEnabled }}" onDragStart="{{ blocks.exp.dragStart }}" onDragOver="{{ blocks.exp.dragOver }}" onDrop="{{ blockDrop }}" onDragEnd="{{ blockDrop }}" style="order:{{ blocks.exp.order }}; cursor:{{ dragCursor }}; min-width:0; grid-column:span 4; scroll-margin-top:80px; display:flex; flex-direction:column; gap:14px;">
+      <h2 style="margin:14px 6px 0; font-size:24px; font-weight:700; letter-spacing:-0.02em;">Experience</h2>
+      <div style="background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--stroke); border-radius:28px; box-shadow:var(--shadow); overflow:hidden; transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.35s;" data-jig="true" style-hover="transform:translateY(-5px) scale(1.012); box-shadow:0 18px 48px rgba(20,25,60,0.2);">
+        <sc-for list="{{ jobs }}" as="job" hint-placeholder-count="3">
+          <div style="padding:22px 26px; border-bottom:1px solid {{ job.sep }}; display:grid; grid-template-columns:44px minmax(0,1fr); gap:16px; align-items:start;">
+            <div style="width:44px; height:44px; border-radius:11px; background:{{ job.iconBg }}; display:grid; place-items:center; color:#fff; font-size:17px; font-weight:800;">{{ job.initial }}</div>
+            <div style="display:flex; flex-direction:column; gap:4px; min-width:0;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap;">
+                <div style="font-size:17px; font-weight:700; letter-spacing:-0.01em;">{{ job.title }}</div>
+                <div style="font-size:13px; color:var(--text3); font-weight:500;">{{ job.dates }}</div>
+              </div>
+              <div style="font-size:14px; font-weight:600; color:var(--accent);">{{ job.org }}</div>
+              <div style="font-size:14px; line-height:1.55; color:var(--text2); text-wrap:pretty;">{{ job.blurb }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- stack + interests column -->
+    <div data-screen-label="Stack column" draggable="{{ dragEnabled }}" onDragStart="{{ blocks.stack.dragStart }}" onDragOver="{{ blocks.stack.dragOver }}" onDrop="{{ blockDrop }}" onDragEnd="{{ blockDrop }}" style="order:{{ blocks.stack.order }}; cursor:{{ dragCursor }}; min-width:0; grid-column:span 2; display:flex; flex-direction:column; gap:14px;">
+      <h2 id="stack" style="margin:14px 6px 0; font-size:24px; font-weight:700; letter-spacing:-0.02em; scroll-margin-top:80px;">Stack</h2>
+      <section data-screen-label="Stack" style="background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--stroke); border-radius:28px; box-shadow:var(--shadow); padding:24px; display:flex; flex-direction:column; gap:14px; transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.35s;" data-jig="true" style-hover="transform:translateY(-5px) scale(1.012); box-shadow:0 18px 48px rgba(20,25,60,0.2);">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.08em;">Languages &amp; Tools</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">C#</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">TypeScript</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">JavaScript</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">Python</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">Java</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">Swift</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">ASP.NET Core</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">Vue 3</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">Tailwind CSS</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">PostgreSQL</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">EF Core</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">MATLAB</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">Arduino C</span>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="font-size:12px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.08em;">Practice</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">REST APIs</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">Agile / Scrum</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">GitLab CI/CD</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">AG Grid Enterprise</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">UX Localization</span>
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 11px; border-radius:999px; color:var(--text2);">Bilingual EN/FR</span>
+          </div>
+        </div>
+      </section>
+      <section data-screen-label="Interests" style="flex:1; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--stroke); border-radius:28px; box-shadow:var(--shadow); padding:24px; display:flex; flex-direction:column; gap:10px; transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.35s;" data-jig="true" style-hover="transform:translateY(-5px) scale(1.012); box-shadow:0 18px 48px rgba(20,25,60,0.2);">
+        <div style="font-size:12px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.08em;">Beyond code</div>
+        <div style="font-size:14px; line-height:1.7; color:var(--text2); text-wrap:pretty;">Basketball, volleyball, badminton, and exploring LLMs. Fun fact: I volunteered at FIFA World Cup Toronto 2026.</div>
+      </section>
+    </div>
+
+    <!-- ask me anything form -->
+    <section data-screen-label="Ask me anything" draggable="{{ dragEnabled }}" onDragStart="{{ blocks.ama.dragStart }}" onDragOver="{{ blocks.ama.dragOver }}" onDrop="{{ blockDrop }}" onDragEnd="{{ blockDrop }}" style="order:{{ blocks.ama.order }}; cursor:{{ dragCursor }}; min-width:0; grid-column:span 6; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border:1px solid var(--stroke); border-radius:28px; box-shadow:var(--shadow); transition:transform 0.35s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.35s;" data-jig="true" style-hover="transform:translateY(-5px) scale(1.012); box-shadow:0 18px 48px rgba(20,25,60,0.2);">
+      <div style="padding:30px 34px; display:flex; flex-direction:column; gap:14px;">
+        <div>
+          <h2 style="margin:0; font-size:24px; font-weight:700; letter-spacing:-0.02em;">Ask me anything</h2>
+          <div style="font-size:14px; color:var(--text2); margin-top:4px;">Your question lands straight on my phone. Leave an email if you'd like a reply.</div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <input value="{{ amaEmail }}" onChange="{{ amaTypeEmail }}" placeholder="Your email (optional)" type="email" style="flex:1; min-width:200px; border:1px solid var(--stroke); background:var(--chip); color:var(--text); font-size:14px; font-family:inherit; padding:11px 16px; border-radius:999px; outline:none;">
+          <input value="{{ amaText }}" onChange="{{ amaType }}" onKeyDown="{{ amaKey }}" placeholder="What would you like to know?" style="flex:2; min-width:240px; border:1px solid var(--stroke); background:var(--chip); color:var(--text); font-size:14px; font-family:inherit; padding:11px 16px; border-radius:999px; outline:none;">
+          <button onClick="{{ amaSend }}" style="border:none; cursor:pointer; background:var(--accent); color:#fff; font-size:15px; font-weight:600; padding:11px 24px; border-radius:999px; flex:none;">{{ amaButton }}</button>
+        </div>
+        <sc-if value="{{ amaHasStatus }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:14px; font-weight:600; color:{{ amaStatusColor }};">{{ amaStatus }}</div>
+        </sc-if>
+      </div>
+    </section>
+  </main>
+
+  <!-- dock -->
+  <footer id="contact" data-screen-label="Contact dock" style="position:fixed; bottom:20px; left:50%; transform:translateX(-50%); z-index:60; display:flex; align-items:center; gap:18px; padding:14px 22px; border-radius:30px; background:var(--dock); backdrop-filter:blur(28px) saturate(1.8); -webkit-backdrop-filter:blur(28px) saturate(1.8); border:1px solid var(--stroke); box-shadow:0 12px 40px rgba(0,0,0,0.18);">
+    <sc-for list="{{ dockApps }}" as="app" hint-placeholder-count="5">
+      <a href="{{ app.href }}" title="{{ app.label }}" onClick="{{ app.click }}" draggable="true" onDragStart="{{ app.dragStart }}" onDragOver="{{ app.dragOver }}" onDrop="{{ dockDrop }}" onDragEnd="{{ dockDrop }}" style="display:flex; flex-direction:column; align-items:center; gap:5px; color:var(--text); transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1); opacity:{{ app.opacity }};" style-hover="transform:translateY(-4px)">
+        <span style="width:52px; height:52px; border-radius:13px; background:{{ app.bg }}; display:grid; place-items:center; color:#fff; font-size:17px; font-weight:800; pointer-events:none;">{{ app.glyph }}</span>
+        <span style="font-size:11px; font-weight:600; color:var(--text2); pointer-events:none;">{{ app.label }}</span>
+      </a>
+    </sc-for>
+  </footer>
+
+  <template id="__bundler_thumbnail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#2C4A73"></rect><rect x="30" y="30" width="40" height="40" rx="10" fill="#fff" opacity="0.95"></rect><text x="50" y="57" font-family="-apple-system,Helvetica,sans-serif" font-size="18" font-weight="700" fill="#2C4A73" text-anchor="middle">SM</text></svg>
+  </template>
+  <div style="text-align:center; padding:56px 0 0; font-size:13px; color:var(--text3);">© 2026 Syaan Merchant</div>
+
+  <!-- Ask Syaan chat -->
+  <sc-if value="{{ chatOpen }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Ask Syaan chat" style="position:fixed; bottom:112px; right:24px; z-index:90; width:370px; max-width:calc(100vw - 40px); height:500px; max-height:calc(100vh - 160px); background:var(--card-solid); border:1px solid var(--stroke); border-radius:24px; box-shadow:0 24px 70px rgba(0,0,0,0.35); display:flex; flex-direction:column; overflow:hidden;">
+      <div style="display:flex; align-items:center; gap:11px; padding:14px 16px; border-bottom:1px solid var(--sep); background:var(--dock); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);">
+        <div style="width:38px; height:38px; border-radius:50%; background:linear-gradient(160deg,#34C759,#1E9E38); display:grid; place-items:center; color:#fff; font-size:16px; font-weight:800; flex:none;">S</div>
+        <div style="flex:1; min-width:0;">
+          <div style="font-size:15px; font-weight:700; letter-spacing:-0.01em;">Ask Syaan</div>
+          <div style="font-size:12px; color:var(--text3);">AI · answers from his resume &amp; projects</div>
+        </div>
+        <button onClick="{{ chatClose }}" aria-label="Close chat" style="border:none; cursor:pointer; width:30px; height:30px; border-radius:50%; background:var(--chip); color:var(--text2); font-size:14px; font-weight:700; flex:none;">✕</button>
+      </div>
+      <div ref="{{ chatListRef }}" style="flex:1; overflow-y:auto; padding:14px 0; display:flex; flex-direction:column; gap:2px;">
+        <sc-for list="{{ chatMsgs }}" as="msg">
+          <div style="display:flex; justify-content:{{ msg.justify }}; padding:3px 14px;">
+            <div style="max-width:80%; padding:9px 13px; border-radius:18px; background:{{ msg.bg }}; color:{{ msg.color }}; font-size:14px; line-height:1.5; white-space:pre-wrap; overflow-wrap:break-word;">{{ msg.text }}</div>
+          </div>
+        </sc-for>
+        <sc-if value="{{ chatBusy }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex; justify-content:flex-start; padding:3px 14px;">
+            <div style="padding:11px 15px; border-radius:18px; background:var(--chip); color:var(--text3); font-size:14px; letter-spacing:2px;">•••</div>
+          </div>
+        </sc-if>
+      </div>
+      <div style="display:flex; gap:8px; padding:12px 14px; border-top:1px solid var(--sep);">
+        <input value="{{ chatInput }}" onChange="{{ chatType }}" onKeyDown="{{ chatKey }}" placeholder="Ask about Syaan…" style="flex:1; min-width:0; border:1px solid var(--stroke); background:var(--chip); color:var(--text); font-size:14px; font-family:inherit; padding:10px 14px; border-radius:999px; outline:none;">
+        <button onClick="{{ chatSend }}" aria-label="Send" style="border:none; cursor:pointer; width:38px; height:38px; border-radius:50%; background:var(--accent); color:#fff; font-size:17px; font-weight:800; flex:none;">↑</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- iOS-style sheet for project write-ups -->
+  <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSheet }}" style="position:fixed; inset:0; z-index:100; background:rgba(10,14,22,0.45); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; align-items:flex-end; justify-content:center;">
+      <div onClick="{{ stopProp }}" data-screen-label="Write-up sheet" style="width:min(720px, 100%); max-height:82vh; overflow-y:auto; background:var(--card-solid); border-radius:28px 28px 0 0; box-shadow:0 -20px 60px rgba(0,0,0,0.3); padding:14px 36px 44px; box-sizing:border-box;">
+        <div style="width:40px; height:5px; border-radius:3px; background:var(--chip); margin:0 auto 20px;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+          <div>
+            <h3 style="margin:0; font-size:26px; font-weight:700; letter-spacing:-0.02em;">{{ sheet.title }}</h3>
+            <div style="font-size:14px; font-weight:600; color:var(--accent); margin-top:3px;">{{ sheet.subtitle }}</div>
+          </div>
+          <button onClick="{{ closeSheet }}" aria-label="Close" style="border:none; cursor:pointer; width:34px; height:34px; border-radius:50%; background:var(--chip); color:var(--text2); font-size:16px; font-weight:700; flex:none;">✕</button>
+        </div>
+        <sc-if value="{{ sheet.hasImages }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px; margin-top:22px;">
+            <sc-for list="{{ sheet.images }}" as="img">
+              <div role="img" aria-label="Project image" style="width:100%; height:260px; background-image:url('{{ img }}'); background-size:contain; background-repeat:no-repeat; background-position:center; background-color:#fff; border-radius:18px; border:1px solid var(--stroke);"></div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ sheet.noImages }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="{{ sheet.imgId }}" shape="rounded" radius="18" placeholder="Drop a project photo" style="width:100%; height:300px; margin-top:22px;" hint-size="100%,300px"></x-import>
+        </sc-if>
+        <sc-for list="{{ sheet.sections }}" as="sec" hint-placeholder-count="3">
+          <div style="margin-top:22px;">
+            <div style="font-size:12px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px;">{{ sec.heading }}</div>
+            <div style="font-size:15px; line-height:1.65; color:var(--text2); text-wrap:pretty;">{{ sec.body }}</div>
+          </div>
+        </sc-for>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:24px;">
+          <sc-for list="{{ sheet.tags }}" as="tag" hint-placeholder-count="4">
+            <span style="background:var(--chip); font-size:13px; font-weight:600; padding:5px 12px; border-radius:999px; color:var(--text2);">{{ tag }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;accent&quot;: {&quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#3D6DB0&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;#3D6DB0&quot;, &quot;#46689A&quot;, &quot;#556070&quot;, &quot;#22344F&quot;], &quot;section&quot;: &quot;Theme&quot;},
+  &quot;headingFont&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;Space Grotesk&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;Instrument Sans&quot;, &quot;Space Grotesk&quot;, &quot;Sora&quot;, &quot;System (SF Pro)&quot;], &quot;section&quot;: &quot;Theme&quot;},
+  &quot;bodyFont&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;Schibsted Grotesk&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;options&quot;: [&quot;Schibsted Grotesk&quot;, &quot;Bricolage Grotesque&quot;, &quot;Instrument Sans&quot;, &quot;System (SF Pro)&quot;], &quot;section&quot;: &quot;Theme&quot;},
+  &quot;showFirstYear&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Content&quot;},
+  &quot;formspreeId&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;https://formspree.io/f/xaqrqdbg&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Ask me anything&quot;}
+}">
+class Component extends DCLogic {
+  state = { dark: false, now: new Date(), sheet: null, locked: false, unlocking: false, jiggling: false, dockOrder: null, dragIdx: null, blockOrder: null, blockDragIdx: null, zone: 'EST', moreOpen: false, amaEmail: '', amaText: '', amaState: 'idle', chatOpen: false, chatInput: '', chatBusy: false,
+    chatMsgs: [{ role: 'assistant', text: "Hey! I'm Syaan's portfolio assistant. Ask me anything about his experience, projects, or skills." }] };
+
+  blockDefault = ['hero', 'edu', 'projects', 'exp', 'stack', 'ama'];
+
+  bodyFonts = {
+    'Schibsted Grotesk': "'Schibsted Grotesk', -apple-system, sans-serif",
+    'Bricolage Grotesque': "'Bricolage Grotesque', -apple-system, sans-serif",
+    'Instrument Sans': "'Instrument Sans', -apple-system, sans-serif",
+    'System (SF Pro)': "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif"
+  };
+
+  headingFonts = {
+    'Instrument Sans': "'Instrument Sans', -apple-system, sans-serif",
+    'Space Grotesk': "'Space Grotesk', -apple-system, sans-serif",
+    'Sora': "'Sora', -apple-system, sans-serif",
+    'System (SF Pro)': "-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif"
+  };
+
+  dockDefs = {
+    email:    { label: 'Email',    href: 'mailto:syaanmerchant09@icloud.com',                        glyph: '@',  bg: 'linear-gradient(160deg,#5AC8FA,#0A84FF)' },
+    mcmaster: { label: 'McMaster', href: 'mailto:merchs8@mcmaster.ca',                               glyph: 'M',  bg: 'linear-gradient(160deg,#8E1F2F,#5E1420)' },
+    linkedin: { label: 'LinkedIn', href: 'https://www.linkedin.com/in/syaan-merchant-127a88285/',    glyph: 'in', bg: 'linear-gradient(160deg,#2E77B5,#1B4F7E)' },
+    github:   { label: 'GitHub',   href: 'https://github.com/syaanmerchant',                         glyph: 'gh', bg: 'linear-gradient(160deg,#3a3a42,#17171c)' },
+    resume:   { label: 'Resume',   href: 'resume.pdf',              glyph: 'CV', bg: 'linear-gradient(160deg,#FF9F0A,#E0740A)' },
+    ask:      { label: 'Ask Me',   href: '#contact',                                                 glyph: '…',  bg: 'linear-gradient(160deg,#34C759,#1E9E38)' }
+  };
+  dockDefault = ['email', 'mcmaster', 'linkedin', 'github', 'resume', 'ask'];
+
+  aboutSyaan = `You are the friendly AI assistant on Syaan Merchant's portfolio website, answering questions from recruiters and visitors. Facts you know:
+- Syaan Merchant: second-year Software Engineering (B.Eng, Co-op) student at McMaster University, 2024-2029 expected. GPA 3.98, Award of Excellence (Faculty of Engineering), Dean's Honour List (x2). Open to co-op/internship opportunities.
+- Experience: Software Developer at Bell Canada (May-Aug 2025) — built a full-stack internal platform integrating Jira/Confluence into an IDE-style web tool (Vue 3, AG Grid Enterprise, ASP.NET Core .NET 8, EF Core, PostgreSQL 15); led the dark mode/theming system adopted by 400+ employees; spearheaded French localization; streamlined GitLab CI/CD cutting shipped defects by 25%. Code Instructor (Sensei) at Code Ninjas (Feb 2023-Aug 2024) — taught JavaScript levels 1-10, reviewed 100+ assignments. Accounting Intern at Berlin Packaging Toronto (Jul 2022-Aug 2024) — accounts receivable, 50+ monthly bilingual collection calls.
+- Projects: CLAIRITY (DeltaHacks 12 hackathon) — privacy-first iOS app (Swift/SwiftUI, Gemini API, OCR/NLP) converting dense medical/insurance language into plain-English action steps; on Devpost. Wastewater Filter System (ENG 1P13) — microplastic filtration concept, ANSYS Granta EduPack material selection + EcoAudit lifecycle analysis. Navioto Vision Assistant (McMaster IMPACT initiative, May 2025) — vest-mounted AI wearable co-designed with a client with Usher's Syndrome; Seeing AI + low-latency Bluetooth, 90%+ recognition accuracy. Airport Luggage System (Jan 2025) — drawbridge/spool baggage system with rotary actuator, QArm + Python, +30% efficiency. Mini Autonomous Car (Jul 2024) — Arduino C obstacle avoidance with gesture control.
+- Skills: C#, Python, TypeScript, JavaScript, Java, Swift, Arduino C, ASP.NET Core (.NET 8), EF Core, PostgreSQL, REST APIs, Vue 3, Tailwind CSS, AG Grid Enterprise, MATLAB, Autodesk Inventor, QArm, GitLab CI/CD, Agile/Scrum, UX localization, bilingual English/French.
+- Interests: basketball, badminton, robotics, LLMs/AI. Volunteered with FIFA World Cup Toronto 2026 as Fan Operations.
+- Contact: syaanmerchant09@icloud.com, merchs8@mcmaster.ca, linkedin.com/in/syaan-merchant-127a88285, github.com/syaanmerchant.
+Rules: be concise (2-4 sentences), warm, and honest. Speak about Syaan in third person. If asked something you don't know about him, say so and suggest emailing him. Politely redirect off-topic questions back to Syaan's work. Never invent facts.`;
+
+  // add new entries here — they appear under "More projects"
+  moreProjects = [
+    { title: 'Airport Luggage System', context: 'McMaster University · Jan 2025', href: 'https://syaanmerchant786.wixsite.com/syaan-merchant/project-one-p1',
+      blurb: 'Drawbridge-and-spool baggage handling system with a rotary actuator, improving handling efficiency by 30% — QArm and Python software for baggage sorting, flight weight prediction, and check-in optimization.',
+      tags: ['Python', 'QArm', 'Rotary Actuator'] },
+    { title: 'Mini Autonomous Car', context: 'Personal · Jul 2024',
+      blurb: '360° autonomous miniature car with 5 cm obstacle detection and self-redirection — real-time avoidance algorithm in Arduino C with a gesture-controlled Arduino Uno navigation system.',
+      tags: ['Arduino C', 'Arduino Uno', 'Robotics'] }
+  ];
+
+  writeups = {
+    filter: {
+      imgId: 'writeup-filter',
+      images: ['uploads/pasted-1784252464598-0.png', 'uploads/Screenshot_16-7-2026_214031_syaanmerchant786.wixsite.com.jpeg'],
+      title: 'Wastewater Filter System',
+      subtitle: 'ENG 1P13 · Design Studio',
+      tags: ['ANSYS Granta EduPack', 'EcoAudit', 'Material Selection', 'CAD'],
+      sections: [
+        { heading: 'The problem', body: 'Municipal wastewater plants let microplastics pass through conventional treatment stages and back into waterways. Our team was tasked with designing a filtration stage that could capture microplastic particles without disrupting existing plant flow rates.' },
+        { heading: 'What we built', body: 'A multi-stage mesh filtration concept sized for a municipal intake, with materials chosen through ANSYS Granta EduPack screening for corrosion resistance, cost, and durability under continuous flow.' },
+        { heading: 'My contribution', body: 'I led the material selection and lifecycle analysis — running EcoAudit comparisons across candidate materials to balance environmental footprint against mechanical performance, and presenting the trade-off study in the final design review.' }
+      ]
+    },
+    navioto: {
+      imgId: 'writeup-navioto',
+      images: ['uploads/Screenshot_15-7-2026_221021_syaanmerchant786.wixsite.com.jpeg'],
+      title: 'Navioto Vision Assistant',
+      subtitle: 'ENG 1P13 · Design Studio',
+      tags: ['Assistive Tech', 'Wearables', 'Client Co-design', 'Ergonomics'],
+      sections: [
+        { heading: 'The problem', body: 'Our client lives with Usher\u2019s Syndrome, which affects both vision and hearing. Off-the-shelf navigation aids relied on audio cues that didn\u2019t work for them, and handheld devices tied up hands needed for a cane.' },
+        { heading: 'What we built', body: 'A hands-free, vest-mounted navigation assistant built through McMaster\u2019s IMPACT human-centered design initiative. Integrates Seeing AI with a low-latency Bluetooth interface for real-time object and text recognition at \u226590% accuracy, with a custom mount and strap system holding tilt within 3\u00b0 under movement.' },
+        { heading: 'My contribution', body: 'I worked directly with the client through co-design sessions, translating their feedback into tactile control placement and mounting decisions, and prototyped the ergonomic load-distribution layout.' }
+      ]
+    }
+  };
+
+  componentDidMount() {
+    let dark = false;
+    try {
+      const saved = localStorage.getItem('syaan-theme');
+      if (saved) dark = saved === 'dark';
+      else dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch (e) {}
+    this.applyTheme(dark);
+    this.setState({ dark });
+    this.applyAccent();
+    this._timer = setInterval(() => this.setState({ now: new Date() }), 30000);
+
+    try {
+      const savedBlocks = JSON.parse(localStorage.getItem('syaan-widgets') || 'null');
+      if (Array.isArray(savedBlocks) && savedBlocks.length === this.blockDefault.length && this.blockDefault.every(id => savedBlocks.includes(id))) {
+        this.setState({ blockOrder: savedBlocks });
+      }
+    } catch (e) {}
+    try {
+      const saved = JSON.parse(localStorage.getItem('syaan-dock') || 'null');
+      if (Array.isArray(saved) && saved.length === this.dockDefault.length && saved.every(id => this.dockDefs[id])) {
+        this.setState({ dockOrder: saved });
+      }
+    } catch (e) {}
+
+    // lock screen: once per session
+    try {
+      if (!sessionStorage.getItem('syaan-unlocked')) this.setState({ locked: true });
+    } catch (e) { this.setState({ locked: true }); }
+
+    this._onKey = (e) => {
+      if (this.state.locked && !this.state.unlocking) { this.doUnlock(); }
+      else if (e.key === 'Escape' && this.state.jiggling) { this.setJiggle(false); }
+    };
+    window.addEventListener('keydown', this._onKey);
+  }
+
+  doUnlock() {
+    this.setState({ unlocking: true });
+    try { sessionStorage.setItem('syaan-unlocked', '1'); } catch (e) {}
+    setTimeout(() => this.setState({ locked: false, unlocking: false }), 700);
+  }
+
+  sendAma() {
+    const q = this.state.amaText.trim();
+    const email = this.state.amaEmail.trim();
+    if (!q || this.state.amaState === 'sending') return;
+    const id = this.props.formspreeId;
+    if (!id) {
+      window.location.href = 'mailto:syaanmerchant09@icloud.com?subject=' + encodeURIComponent('Question from your portfolio') + '&body=' + encodeURIComponent(q + (email ? '\n\nFrom: ' + email : ''));
+      return;
+    }
+    this.setState({ amaState: 'sending' });
+    const fd = new FormData();
+    if (email) fd.append('email', email);
+    fd.append('message', q);
+    fetch(String(id).startsWith('http') ? id : 'https://formspree.io/f/' + id, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: fd
+    }).then(r => {
+      if (r.ok) this.setState({ amaState: 'sent', amaText: '', amaEmail: '' });
+      else return r.json().then(j => { console.warn('Formspree error:', j); this.setState({ amaState: 'error' }); });
+    }).catch((e) => { console.warn('Formspree fetch failed:', e); this.setState({ amaState: 'error' }); });
+  }
+
+  async sendChat() {
+    const q = this.state.chatInput.trim();
+    if (!q || this.state.chatBusy) return;
+    const msgs = this.state.chatMsgs.concat([{ role: 'user', text: q }]);
+    this.setState({ chatMsgs: msgs, chatInput: '', chatBusy: true }, () => this.scrollChat());
+    let reply;
+    try {
+      if (!window.claude || !window.claude.complete) throw new Error('no claude');
+      reply = await window.claude.complete({
+        system: this.aboutSyaan,
+        messages: msgs.map(m => ({ role: m.role, content: m.text }))
+      });
+    } catch (e) {
+      reply = "I couldn't reach the AI right now — try again in a moment, or email Syaan directly at syaanmerchant09@icloud.com.";
+    }
+    this.setState({ chatMsgs: this.state.chatMsgs.concat([{ role: 'assistant', text: reply }]), chatBusy: false }, () => this.scrollChat());
+  }
+
+  scrollChat() {
+    if (this._chatEl) this._chatEl.scrollTop = this._chatEl.scrollHeight;
+  }
+
+  setJiggle(on) {
+    document.documentElement.classList.toggle('jiggle', on);
+    this.setState({ jiggling: on });
+  }
+
+  componentDidUpdate() { this.applyAccent(); }
+  componentWillUnmount() {
+    clearInterval(this._timer);
+    clearTimeout(this._pressTimer);
+    window.removeEventListener('keydown', this._onKey);
+  }
+
+  applyTheme(dark) {
+    document.documentElement.classList.toggle('dark', dark);
+  }
+
+  applyAccent() {
+    const a = this.props.accent;
+    if (a) document.documentElement.style.setProperty('--accent', a);
+    const f = this.headingFonts[this.props.headingFont ?? 'Instrument Sans'];
+    if (f) document.documentElement.style.setProperty('--hfont', f);
+    const b = this.bodyFonts[this.props.bodyFont ?? 'Schibsted Grotesk'];
+    if (b) document.documentElement.style.setProperty('--bfont', b);
+  }
+
+  renderVals() {
+    const dark = this.state.dark;
+    const tz = this.state.zone === 'PST' ? 'America/Los_Angeles' : 'America/Toronto';
+    const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: true }).formatToParts(this.state.now);
+    const get = (t) => (parts.find(p => p.type === t) || {}).value || '';
+    const clock = get('hour') + ':' + get('minute') + ' ' + get('dayPeriod');
+    const h = parseInt(get('hour'), 10) % 12 + (get('dayPeriod') === 'PM' ? 12 : 0);
+    const m = parseInt(get('minute'), 10);
+
+    const jobs = [
+      { initial: 'B', iconBg: 'linear-gradient(160deg,#0A84FF,#0055C9)', title: 'Software Developer Intern', org: 'Bell Canada', dates: 'May – Aug 2025',
+        blurb: 'Built a full-stack internal platform integrating Jira and Confluence into an IDE-style web tool (Vue 3 + ASP.NET Core / .NET 8, PostgreSQL). Led the dark mode and theming system adopted by 400+ employees, spearheaded French localization, and streamlined GitLab CI/CD \u2014 cutting shipped defects by 25%.', sep: 'var(--sep)' },
+      { initial: 'CN', iconBg: 'linear-gradient(160deg,#32D74B,#1E9E38)', title: 'Code Instructor (Sensei)', org: 'Code Ninjas', dates: 'Feb 2023 – Aug 2024',
+        blurb: 'Taught JavaScript fundamentals through advanced concepts (Levels 1–10); reviewed and graded 100+ assignments with debugging support that cut recurring errors.', sep: 'var(--sep)' },
+      { initial: 'BP', iconBg: 'linear-gradient(160deg,#FF9F0A,#D97706)', title: 'Accounting Intern', org: 'Berlin Packaging Toronto', dates: 'Jul 2022 – Aug 2024',
+        blurb: 'Managed accounts receivable via 50+ monthly bilingual collection calls; resolved most billing inquiries on first contact.', sep: 'transparent' }
+    ];
+
+    return {
+      clock,
+      zoneLabel: this.state.zone,
+      toggleZone: () => this.setState({ zone: this.state.zone === 'EST' ? 'PST' : 'EST' }),
+      jobs,
+      sheetOpen: !!this.state.sheet,
+      sheet: (() => {
+        const s = this.state.sheet ? this.writeups[this.state.sheet] : { sections: [], tags: [] };
+        return Object.assign({ hasImages: !!(s.images && s.images.length), noImages: !!this.state.sheet && !(s.images && s.images.length) }, s);
+      })(),
+      openFilter: (e) => { e.preventDefault(); this.setState({ sheet: 'filter' }); },
+      openNavioto: (e) => { e.preventDefault(); this.setState({ sheet: 'navioto' }); },
+      closeSheet: () => this.setState({ sheet: null }),
+      stopProp: (e) => e.stopPropagation(),
+      locked: this.state.locked,
+      lockY: this.state.unlocking ? '-100%' : '0',
+      lockClock: ((h % 12) || 12) + ':' + String(m).padStart(2, '0'),
+      lockDate: this.state.now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }),
+      unlock: () => { if (!this.state.unlocking) this.doUnlock(); },
+      jiggling: this.state.jiggling,
+      stopJiggle: () => this.setJiggle(false),
+      pressStart: (e) => {
+        if (e.target.closest('a, button')) return;
+        clearTimeout(this._pressTimer);
+        this._pressTimer = setTimeout(() => this.setJiggle(!this.state.jiggling), 600);
+      },
+      pressEnd: () => clearTimeout(this._pressTimer),
+      dockApps: (this.state.dockOrder || this.dockDefault).filter(id => id !== 'ask' || (window.claude && window.claude.complete)).map((id, i) => {
+        const d = this.dockDefs[id];
+        return Object.assign({}, d, {
+          click: id === 'ask' ? (e) => { e.preventDefault(); this.setState({ chatOpen: !this.state.chatOpen }); } : undefined,
+          opacity: this.state.dragIdx === i ? '0.35' : '1',
+          dragStart: (e) => {
+            e.dataTransfer.effectAllowed = 'move';
+            this.setState({ dragIdx: i });
+          },
+          dragOver: (e) => {
+            e.preventDefault();
+            const from = this.state.dragIdx;
+            if (from === null || from === i) return;
+            const order = (this.state.dockOrder || this.dockDefault).slice();
+            const [moved] = order.splice(from, 1);
+            order.splice(i, 0, moved);
+            this.setState({ dockOrder: order, dragIdx: i });
+          }
+        });
+      }),
+      dragEnabled: this.state.jiggling,
+      dragCursor: this.state.jiggling ? 'grab' : 'auto',
+      blocks: (() => {
+        const order = this.state.blockOrder || this.blockDefault;
+        const out = {};
+        order.forEach((id, i) => {
+          out[id] = {
+            order: i,
+            dragStart: (e) => {
+              if (!this.state.jiggling) { e.preventDefault(); return; }
+              e.dataTransfer.effectAllowed = 'move';
+              e.stopPropagation();
+              this.setState({ blockDragIdx: i });
+            },
+            dragOver: (e) => {
+              e.preventDefault();
+              const from = this.state.blockDragIdx;
+              if (from === null || from === i) return;
+              const next = (this.state.blockOrder || this.blockDefault).slice();
+              const [moved] = next.splice(from, 1);
+              next.splice(i, 0, moved);
+              this.setState({ blockOrder: next, blockDragIdx: i });
+            }
+          };
+        });
+        return out;
+      })(),
+      blockDrop: (e) => {
+        e.preventDefault();
+        if (this.state.blockDragIdx !== null) {
+          try { localStorage.setItem('syaan-widgets', JSON.stringify(this.state.blockOrder || this.blockDefault)); } catch (err) {}
+          this.setState({ blockDragIdx: null });
+        }
+      },
+      amaEmail: this.state.amaEmail,
+      amaText: this.state.amaText,
+      amaTypeEmail: (e) => this.setState({ amaEmail: e.target.value, amaState: 'idle' }),
+      amaType: (e) => this.setState({ amaText: e.target.value, amaState: 'idle' }),
+      amaKey: (e) => { if (e.key === 'Enter') this.sendAma(); },
+      amaSend: () => this.sendAma(),
+      amaButton: this.state.amaState === 'sending' ? 'Sending…' : 'Send',
+      amaHasStatus: this.state.amaState === 'sent' || this.state.amaState === 'error',
+      amaStatus: this.state.amaState === 'sent' ? 'Sent! Thanks — I\u2019ll get back to you soon.' : 'Something went wrong — try again or email me directly.',
+      amaStatusColor: this.state.amaState === 'sent' ? '#30D158' : '#FF453A',
+      chatOpen: this.state.chatOpen,
+      chatClose: () => this.setState({ chatOpen: false }),
+      chatInput: this.state.chatInput,
+      chatBusy: this.state.chatBusy,
+      chatType: (e) => this.setState({ chatInput: e.target.value }),
+      chatKey: (e) => { if (e.key === 'Enter') this.sendChat(); },
+      chatSend: () => this.sendChat(),
+      chatListRef: (el) => { this._chatEl = el; },
+      chatMsgs: this.state.chatMsgs.map(m => ({
+        text: m.text,
+        justify: m.role === 'user' ? 'flex-end' : 'flex-start',
+        bg: m.role === 'user' ? 'var(--accent)' : 'var(--chip)',
+        color: m.role === 'user' ? '#fff' : 'var(--text)'
+      })),
+      dockDrop: (e) => {
+        e.preventDefault();
+        if (this.state.dragIdx !== null) {
+          try { localStorage.setItem('syaan-dock', JSON.stringify(this.state.dockOrder || this.dockDefault)); } catch (err) {}
+          this.setState({ dragIdx: null });
+        }
+      },
+      showFirstYear: this.props.showFirstYear ?? true,
+      moreOpen: this.state.moreOpen,
+      moreCount: this.moreProjects.length + (this.moreProjects.length === 1 ? ' project' : ' projects'),
+      moreChevron: this.state.moreOpen ? '180deg' : '0deg',
+      moreProjects: this.moreProjects.map(p => Object.assign({ noHref: !p.href }, p)),
+      toggleMore: () => this.setState({ moreOpen: !this.state.moreOpen }),
+      switchBg: dark ? 'var(--accent)' : 'rgba(120,120,128,0.32)',
+      knobLeft: dark ? '22px' : '2px',
+      toggleTheme: () => {
+        const next = !this.state.dark;
+        this.applyTheme(next);
+        try { localStorage.setItem('syaan-theme', next ? 'dark' : 'light'); } catch (e) {}
+        this.setState({ dark: next });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
